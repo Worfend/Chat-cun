@@ -1,6 +1,6 @@
 import streamlit as st
 import requests
-import google.generativeai as genai
+from google import genai
 
 # ==========================================
 # CONFIGURACIÓN GEMINI
