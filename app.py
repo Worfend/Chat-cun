@@ -10,9 +10,16 @@ client = genai.Client(
 # Documento fuente
 URL_DOCUMENTO = "https://raw.githubusercontent.com/sandragutierrezr/Educacion/refs/heads/main/Reglamento-Estudiantil-CUN.txt"
 
-documento = requests.get(URL_DOCUMENTO).text
+try:
+    documento = requests.get(URL_DOCUMENTO, timeout=15).text[:15000]
+except Exception as e:
+    st.error(f"Error cargando documento: {e}")
+    st.stop()
 
-# Interfaz
+# ==========================
+# INTERFAZ
+# ==========================
+
 st.title("🎓 Asistente Reglamento Estudiantil CUN")
 
 st.write(
@@ -23,24 +30,45 @@ pregunta = st.text_input(
     "Escribe tu pregunta"
 )
 
+# ==========================
+# CONSULTA
+# ==========================
+
 if st.button("Consultar"):
 
+    if not pregunta.strip():
+        st.warning("Por favor ingresa una pregunta.")
+        st.stop()
+
     prompt = f"""
-    Eres un asistente educativo especializado en la CUN.
+Eres un asistente educativo especializado en la Corporación Unificada Nacional de Educación Superior (CUN).
 
-    Responde únicamente con información basada en el siguiente reglamento:
+Responde únicamente utilizando la información contenida en el siguiente reglamento.
 
-    {documento}
+Si la respuesta no aparece en el documento, indica claramente que no fue encontrada.
 
-    Pregunta:
-    {pregunta}
-    """
+DOCUMENTO:
 
-    respuesta = client.models.generate_content(
-        model="gemini-3.5-flash-lite",
-        contents=prompt
-    )
+{documento}
 
-    st.subheader("Respuesta")
+PREGUNTA:
 
-    st.write(respuesta.text)
+{pregunta}
+"""
+
+    try:
+
+        with st.spinner("Consultando reglamento..."):
+
+            respuesta = client.models.generate_content(
+                model="gemini-3.5-flash-lite",
+                contents=prompt
+            )
+
+        st.subheader("📚 Respuesta")
+
+        st.write(respuesta.text)
+
+    except Exception as e:
+
+        st.error(f"Error Gemini: {e}")
