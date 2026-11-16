@@ -1,13 +1,17 @@
 import streamlit as st
 import requests
-from google import genai
+import google.generativeai as genai
 
 # ==========================================
 # CONFIGURACIÓN GEMINI
 # ==========================================
 
-client = genai.Client(
-    api_key="AQ.Ab8RN6KRtnwU8jcBpLOaxAQXPD7MtUJFHe2GVMQQ_NNJSD3oBg"
+genai.configure(
+    api_key="AQ.Ab8RN6J2AGUwpaaus2YrKmr2k3oPLACOU40f_h22DnSkIjlsyg"
+)
+
+modelo = genai.GenerativeModel(
+    "gemini-1.5-flash"
 )
 
 # ==========================================
@@ -17,6 +21,7 @@ client = genai.Client(
 URL_DOCUMENTO = "https://raw.githubusercontent.com/sandragutierrezr/Educacion/refs/heads/main/Reglamento-Estudiantil-CUN.txt"
 
 try:
+
     documento = requests.get(
         URL_DOCUMENTO,
         timeout=15
@@ -63,7 +68,7 @@ if st.button("Consultar"):
     prompt = f"""
 Eres un asistente educativo especializado en la Corporación Unificada Nacional de Educación Superior (CUN).
 
-Responde únicamente utilizando la información contenida en el siguiente reglamento.
+Responde únicamente usando la información del reglamento.
 
 Si la respuesta no aparece en el documento, indica claramente que no fue encontrada.
 
@@ -82,9 +87,8 @@ PREGUNTA:
             "Consultando reglamento..."
         ):
 
-            respuesta = client.models.generate_content(
-                model="gemini-3.5-flash-lite",
-                contents=prompt
+            respuesta = modelo.generate_content(
+                prompt
             )
 
         st.subheader(
