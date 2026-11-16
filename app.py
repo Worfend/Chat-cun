@@ -62,7 +62,7 @@ if st.button("Consultar"):
     prompt = f"""
 Eres un asistente educativo especializado en la Corporación Unificada Nacional de Educación Superior (CUN).
 
-Responde únicamente usando la información contenida en el Reglamento Estudiantil.
+Responde únicamente utilizando la información contenida en el Reglamento Estudiantil.
 
 Si la respuesta no aparece en el documento, indica claramente que no fue encontrada.
 
@@ -77,26 +77,19 @@ PREGUNTA:
 
     try:
 
-        with st.spinner(
-            "Consultando reglamento..."
-        ):
+        with st.spinner("Consultando reglamento..."):
 
-      respuesta = client.models.generate_content(
-    model="gemini-3.8-flash",
-    contents=prompt
-)
-        st.subheader(
-            "📚 Respuesta"
-        )
+            respuesta = client.models.generate_content(
+                model="gemini-3.8-flash",
+                contents=prompt
+            )
+
+        st.subheader("📚 Respuesta")
 
         if hasattr(respuesta, "text"):
-            st.write(
-                respuesta.text
-            )
+            st.write(respuesta.text)
         else:
-            st.write(
-                respuesta
-            )
+            st.write(respuesta)
 
     except Exception as e:
 
