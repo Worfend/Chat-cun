@@ -4,7 +4,7 @@ from google import genai
 
 # Configuración Gemini
 client = genai.Client(
-    api_key=st.secrets["GEMINI_API_KEY"]
+    api_key="AQ.Ab8RN6KRtnwU8jcBpLOaxAQXPD7MtUJFHe2GVMQQ_NNJSD3oBg"
 )
 
 # Documento fuente
