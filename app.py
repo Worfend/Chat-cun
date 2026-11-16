@@ -6,12 +6,8 @@ from google import genai
 # CONFIGURACIÓN GEMINI
 # ==========================================
 
-genai.configure(
+client = genai.Client(
     api_key="AQ.Ab8RN6J2AGUwpaaus2YrKmr2k3oPLACOU40f_h22DnSkIjlsyg"
-)
-
-modelo = genai.GenerativeModel(
-    "gemini-1.5-flash"
 )
 
 # ==========================================
@@ -39,9 +35,7 @@ except Exception as e:
 # INTERFAZ
 # ==========================================
 
-st.title(
-    "🎓 Asistente Reglamento Estudiantil CUN"
-)
+st.title("🎓 Asistente Reglamento Estudiantil CUN")
 
 st.write(
     "Realiza preguntas sobre el Reglamento Estudiantil de la CUN."
@@ -68,7 +62,7 @@ if st.button("Consultar"):
     prompt = f"""
 Eres un asistente educativo especializado en la Corporación Unificada Nacional de Educación Superior (CUN).
 
-Responde únicamente usando la información del reglamento.
+Responde únicamente utilizando la información contenida en el reglamento.
 
 Si la respuesta no aparece en el documento, indica claramente que no fue encontrada.
 
@@ -87,20 +81,18 @@ PREGUNTA:
             "Consultando reglamento..."
         ):
 
-            respuesta = modelo.generate_content(
-                prompt
+            respuesta = client.models.generate_content(
+                model="gemini-1.5-flash",
+                contents=prompt
             )
 
-        st.subheader(
-            "📚 Respuesta"
-        )
+        st.subheader("📚 Respuesta")
 
-        st.write(
-            respuesta.text
-        )
+        if hasattr(respuesta, "text"):
+            st.write(respuesta.text)
+        else:
+            st.write(respuesta)
 
     except Exception as e:
 
-        st.error(
-            f"Error Gemini: {e}"
-        )
+        st.error(f"Error Gemini: {e}")
