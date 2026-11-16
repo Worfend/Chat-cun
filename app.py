@@ -81,11 +81,10 @@ PREGUNTA:
             "Consultando reglamento..."
         ):
 
-            respuesta = client.models.generate_content(
-                model="gemini-2.5-flash",
-                contents=prompt
-            )
-
+      respuesta = client.models.generate_content(
+    model="gemini-3.8-flash",
+    contents=prompt
+)
         st.subheader(
             "📚 Respuesta"
         )
